@@ -1,3 +1,3 @@
 # riverpod_num_pagination
 
-A new Flutter project.
+A Riverpod Number Pagination Flutter project.
