@@ -20,7 +20,7 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     final productList = ref.watch(getProductsProvider(page));
-    // debugPrint(error('### productList : $productList '));
+    // debugPrint(success('### productList : $productList '));
 
     return SafeArea(
       child: Scaffold(

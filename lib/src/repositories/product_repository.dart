@@ -30,7 +30,7 @@ class ProductRepository {
 
       if (response.statusCode != 200) throw 'Fail to fetch products';
 
-      final List productList = response.data['produtcts'];
+      final List productList = response.data['products'];
 
       totalProducts = response.data['total'];
       totalPages =
