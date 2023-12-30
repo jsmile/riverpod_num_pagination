@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:number_paginator/number_paginator.dart';
 
+import '../../repositories/product_repository.dart';
 import '../../utilities/ansicolor_debug.dart';
+import '../product/product_page.dart';
 import 'products_providers.dart';
 
 class ProductsPage extends ConsumerStatefulWidget {
@@ -17,10 +20,14 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     final productList = ref.watch(getProductsProvider(page));
-    debugPrint(error('### productList : $productList '));
+    // debugPrint(error('### productList : $productList '));
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Products'),
+          backgroundColor: Colors.deepPurple[200],
+        ),
         body: productList.when(
           data: (products) => ListView.separated(
             itemCount: products.length,
@@ -29,9 +36,16 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
             itemBuilder: (BuildContext context, int index) {
               final product = products[index];
 
-              return ListTile(
-                title: Text(product.title),
-                subtitle: Text(product.brand),
+              return GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ProductPage(id: product.id),
+                  ),
+                ),
+                child: ListTile(
+                  title: Text(product.title),
+                  subtitle: Text(product.brand),
+                ),
               );
             },
           ),
@@ -49,6 +63,21 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
             child: CircularProgressIndicator(),
           ),
         ),
+        bottomNavigationBar: (totalProducts == 0 && totalPages == 1)
+            ? const SizedBox.shrink() // data 가 없으면 보이지 않게
+            : Card(
+                margin: EdgeInsets.zero,
+                elevation: 4,
+                child: NumberPaginator(
+                  numberPages: totalPages, // 총 페이지 수
+                  onPageChange: (int index) {
+                    // 페이지 변경시 호출
+                    setState(() {
+                      page = index + 1; // index 는 0 부터 시작 : 선택된 페이지
+                    });
+                  },
+                ),
+              ),
       ),
     );
   }
